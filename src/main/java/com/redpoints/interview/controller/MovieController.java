@@ -21,6 +21,9 @@ public class MovieController {
 		this.movieMapper = movieMapper;
 	}
 
+	// All methods have been written using getAllMovies() pattern. However, using ResponseEntity could be considered as well.
+	// It allows to build a JSON response with correct status code, error messages and models to pass in response.
+
 	@GetMapping
 	public List<Movie> getAllMovies() {
 		return movieMapper.entitiesToModels(movieService.getAllMovies());

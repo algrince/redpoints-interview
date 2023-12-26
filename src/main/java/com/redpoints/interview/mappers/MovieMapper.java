@@ -17,7 +17,6 @@ public final class MovieMapper {
 		movieEntity.setDirector(movie.getDirector());
 
 		return movieEntity;
-//		return null;
 	}
 
 	public Movie entityToModel(MovieEntity movieEntity) {
@@ -25,7 +24,7 @@ public final class MovieMapper {
 		movie.setId(movieEntity.getId());
 		movie.setTitle(movieEntity.getTitle());
 		movie.setYear(movieEntity.getYear());
-//		added director assignation as well
+		// To ensure the complete mapping, director assignation was added
 		movie.setDirector(movieEntity.getDirector());
 
 		return movie;

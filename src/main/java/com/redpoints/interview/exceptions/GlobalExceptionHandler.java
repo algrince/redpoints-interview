@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-//    The use of logger from third parties (for example, lombok) could be
-//    a better solution for delivering error messages to console
+   // The use of logger from third parties (for example, lombok) could be
+   // a better solution for delivering error messages to console
 
     @ExceptionHandler(MovieNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)

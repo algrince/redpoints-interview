@@ -21,8 +21,8 @@ public class MovieService {
 		this.validator = validator;
 	}
 
-//	To ensure that every method will be carried within a transaction,
-//	Transactional annotation was added
+	// To ensure that every method will be carried within a transaction,
+	// Transactional annotation was added
 	@Transactional(readOnly = true)
 	public List<MovieEntity> getAllMovies() {
 		return repository.findAll();
@@ -31,10 +31,8 @@ public class MovieService {
 	@Transactional(readOnly = true)
 	public MovieEntity getMovieById(Long id) {
 		validator.validateIdNotNull(id);
-		Optional<MovieEntity> movieEntity = repository.findById(id);
-		return movieEntity.orElseThrow(() -> {
-			throw new MovieNotFoundException(String.format("There is no movie with this id: %d", id));
-		});
+		return repository.findById(id).orElseThrow(() ->
+				new MovieNotFoundException(String.format("There is no movie with this id: %d", id)));
 	}
 
 	@Transactional
@@ -53,8 +51,8 @@ public class MovieService {
 	@Transactional
 	public void deleteMovieById(Long id) {
 		validator.validateIdNotNull(id);
-//		deleteById() method is used. In this case if an object is found in DB it will be deleted.
-//		If it's necessary to ensure that object exists, use of delete() method could be considered.
+		// deleteById() method is used. In this case if an object is found in DB it will be deleted.
+		// If it's necessary to ensure that object exists, use of delete() method could be considered.
 		repository.deleteById(id);
 	}
 }

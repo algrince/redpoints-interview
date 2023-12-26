@@ -34,8 +34,8 @@ class MovieServiceTest {
 
 
     @Test
-    public void testGetAllMoviesPositive() {
-//        given
+    void testGetAllMoviesPositive() {
+        // given
         MovieService service = new MovieService(repository, validator);
         List<MovieEntity> movieEntities = new ArrayList<>();
         Collections.addAll(movieEntities,
@@ -44,70 +44,72 @@ class MovieServiceTest {
                 new MovieEntity("TBOSAS", "Francis Lawrence", 2023));
         doReturn(movieEntities).when(repository).findAll();
 
-//        when
+        // when
         List<MovieEntity> foundMovieEntities = service.getAllMovies();
 
-//        then
+        // then
         verify(repository).findAll();
         assertEquals(movieEntities, foundMovieEntities);
     }
 
     @Test
-    public void testGetMovieByIdPositive() {
-//        given
+    void testGetMovieByIdPositive() {
+        // given
         MovieService service = new MovieService(repository, validator);
         Long id = 1L;
         MovieEntity movieEntity = new MovieEntity("Tenet", "Christopher Nolan", 2020);
         doReturn(Optional.of(movieEntity)).when(repository).findById(id);
 
-//        when
+        // when
         MovieEntity foundMovieEntity = service.getMovieById(id);
 
-//        then
+        // then
         verify(repository).findById(id);
+        verify(validator).validateIdNotNull(id);
         assertEquals(movieEntity, foundMovieEntity);
     }
 
     @Test
-    public void testGetMovieByIdNullId() {
-//        given
+    void testGetMovieByIdNullId() {
+        // given
         MovieService service = new MovieService(repository, validator);
-        Long id = null;
-        doThrow(InvalidIdException.class).when(validator).validateIdNotNull(id);
+        Long nullId = null;
+        doThrow(InvalidIdException.class).when(validator).validateIdNotNull(nullId);
 
-//        then
-        assertThrows(InvalidIdException.class, () -> service.getMovieById(id));
+        // then
+        assertThrows(InvalidIdException.class, () -> service.getMovieById(nullId));
     }
 
     @Test
-    public void testGetMovieByIdWrongId() {
-//        given
+    void testGetMovieByIdWrongId() {
+        // given
         MovieService service = new MovieService(repository, validator);
+        Long nonexistentId = 2L;
 
-//        then
-        assertThrows(MovieNotFoundException.class, () -> service.getMovieById(2L));
+        // then
+        assertThrows(MovieNotFoundException.class, () -> service.getMovieById(nonexistentId));
     }
 
 
     @Test
-    public void testCreateMovie() {
-//        given
+    void testCreateMovie() {
+        // given
         MovieService service = new MovieService(repository, validator);
         MovieEntity movieEntity = new MovieEntity("Tenet", "Christopher Nolan", 2020);
         doReturn(movieEntity).when(repository).save(movieEntity);
 
-//        when
+        // when
         MovieEntity createdMovieEntity = service.createMovie(movieEntity);
 
-//        then
+        // then
         verify(repository).save(movieEntity);
         assertEquals(movieEntity, createdMovieEntity);
     }
 
 
     @Test
-    public void testUpdateMoviePositive() {
-//        given
+    void testUpdateMoviePositive() {
+        // given
         MovieService service = new MovieService(repository, validator);
         MovieEntity oldMovieEntity = new MovieEntity("Tenet", "Christopher Nolan", 2020);
         MovieEntity newMovieEntity = new MovieEntity("Oppenheimer", "Christopher Nolan", 2023);
@@ -116,10 +118,10 @@ class MovieServiceTest {
         newMovieEntity.setId(id);
         doReturn(newMovieEntity).when(repository).save(newMovieEntity);
 
-//        when
-        MovieEntity updatedMovieEntity = service.updateMovie(newMovieEntity, id);
+        // when
+        service.updateMovie(newMovieEntity, id);
 
-//        then
+        // then
         verify(repository).save(newMovieEntity);
         verify(validator).validateMovieForUpdate(newMovieEntity.getId(), id);
         verify(validator).validateIdNotNull(id);
@@ -129,15 +131,15 @@ class MovieServiceTest {
     }
 
     @Test
-    public void testDeleteMovie() {
-//        given
+    void testDeleteMovie() {
+        // given
         MovieService service = new MovieService(repository, validator);
         Long id = 1L;
 
-//        when
+        // when
         service.deleteMovieById(id);
 
-//        then
+        // then
         verify(repository).deleteById(id);
     }
 
