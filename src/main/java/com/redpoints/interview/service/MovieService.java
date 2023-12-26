@@ -47,7 +47,6 @@ public class MovieService {
 		validator.validateIdNotNull(pathVariableId);
 		Long movieEntityToUpdateId = movieEntityToUpdate.getId();
 		validator.validateMovieForUpdate(movieEntityToUpdateId, pathVariableId);
-//		TODO: check properties mapping
 		return repository.save(movieEntityToUpdate);
 	}
 

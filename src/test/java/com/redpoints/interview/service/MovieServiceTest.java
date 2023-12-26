@@ -105,20 +105,28 @@ class MovieServiceTest {
     }
 
 
-//    @Test
-//    public void testUpdateMoviePositive() {
-////        given
-//        MovieService service = new MovieService(repository, validator);
-//        MovieEntity oldMovieEntity = new MovieEntity("Tenet", "Christopher Nolan", 2020);
-//        MovieEntity newMovieEntity = new MovieEntity("Oppenheimer", "Christopher Nolan", 2023);
-//        Long id = 1L;
-//        oldMovieEntity.setId(id);
-//        newMovieEntity.setId(id);
-//        doReturn(newMovieEntity).when(repository).save()
-//
-////        when
-//
-//    }
+    @Test
+    public void testUpdateMoviePositive() {
+//        given
+        MovieService service = new MovieService(repository, validator);
+        MovieEntity oldMovieEntity = new MovieEntity("Tenet", "Christopher Nolan", 2020);
+        MovieEntity newMovieEntity = new MovieEntity("Oppenheimer", "Christopher Nolan", 2023);
+        Long id = 1L;
+        oldMovieEntity.setId(id);
+        newMovieEntity.setId(id);
+        doReturn(newMovieEntity).when(repository).save(newMovieEntity);
+
+//        when
+        MovieEntity updatedMovieEntity = service.updateMovie(newMovieEntity, id);
+
+//        then
+        verify(repository).save(newMovieEntity);
+        verify(validator).validateMovieForUpdate(newMovieEntity.getId(), id);
+        verify(validator).validateIdNotNull(id);
+
+        assertEquals(newMovieEntity, service.updateMovie(newMovieEntity, id));
+
+    }
 
     @Test
     public void testDeleteMovie() {
