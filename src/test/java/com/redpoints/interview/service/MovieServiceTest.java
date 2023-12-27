@@ -5,6 +5,7 @@ import com.redpoints.interview.exceptions.MovieNotFoundException;
 import com.redpoints.interview.repository.MovieRepository;
 import com.redpoints.interview.service.data.MovieEntity;
 import com.redpoints.interview.validators.MovieValidator;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -27,21 +28,26 @@ class MovieServiceTest {
     @Mock
     private MovieValidator validator;
 
+    private static List<MovieEntity> movieEntities;
+
     @BeforeEach
     public void init() {
         MockitoAnnotations.openMocks(this);
     }
 
+    @BeforeAll
+    static void initMovieEntities() {
+        movieEntities = new ArrayList<>();
+        Collections.addAll(movieEntities,
+                new MovieEntity("Tenet", "Christopher Nolan", 2020),
+                new MovieEntity("Oppenheimer", "Christopher Nolan", 2023),
+                new MovieEntity("TBOSAS", "Francis Lawrence", 2023));
+    }
 
     @Test
     void testGetAllMoviesPositive() {
         // given
         MovieService service = new MovieService(repository, validator);
-        List<MovieEntity> movieEntities = new ArrayList<>();
-        Collections.addAll(movieEntities,
-                new MovieEntity("Tenet", "Christopher Nolan", 2020),
-                new MovieEntity("Oppenheimer", "Christopher Nolan", 2023),
-                new MovieEntity("TBOSAS", "Francis Lawrence", 2023));
         doReturn(movieEntities).when(repository).findAll();
 
         // when
@@ -57,7 +63,7 @@ class MovieServiceTest {
         // given
         MovieService service = new MovieService(repository, validator);
         Long id = 1L;
-        MovieEntity movieEntity = new MovieEntity("Tenet", "Christopher Nolan", 2020);
+        MovieEntity movieEntity = movieEntities.get(0);
         doReturn(Optional.of(movieEntity)).when(repository).findById(id);
 
         // when
@@ -95,7 +101,7 @@ class MovieServiceTest {
     void testCreateMovie() {
         // given
         MovieService service = new MovieService(repository, validator);
-        MovieEntity movieEntity = new MovieEntity("Tenet", "Christopher Nolan", 2020);
+        MovieEntity movieEntity = movieEntities.get(0);
         doReturn(movieEntity).when(repository).save(movieEntity);
 
         // when
@@ -111,10 +117,8 @@ class MovieServiceTest {
     void testUpdateMoviePositive() {
         // given
         MovieService service = new MovieService(repository, validator);
-        MovieEntity oldMovieEntity = new MovieEntity("Tenet", "Christopher Nolan", 2020);
-        MovieEntity newMovieEntity = new MovieEntity("Oppenheimer", "Christopher Nolan", 2023);
+        MovieEntity newMovieEntity = movieEntities.get(0);
         Long id = 1L;
-        oldMovieEntity.setId(id);
         newMovieEntity.setId(id);
         doReturn(newMovieEntity).when(repository).save(newMovieEntity);
 

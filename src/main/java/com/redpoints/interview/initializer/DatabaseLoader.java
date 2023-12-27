@@ -3,6 +3,7 @@ package com.redpoints.interview.initializer;
 import com.redpoints.interview.service.data.MovieEntity;
 import com.redpoints.interview.repository.MovieRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
