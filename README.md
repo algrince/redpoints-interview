@@ -1,5 +1,7 @@
 <h3>CRUD application</h3>
+
 **Installation requirements:**
+
 - JDK 17
 - Maven  v3.9.2
 
