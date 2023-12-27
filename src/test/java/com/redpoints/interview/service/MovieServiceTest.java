@@ -4,6 +4,7 @@ import com.redpoints.interview.exceptions.InvalidIdException;
 import com.redpoints.interview.exceptions.MovieNotFoundException;
 import com.redpoints.interview.repository.MovieRepository;
 import com.redpoints.interview.service.data.MovieEntity;
+import com.redpoints.interview.validators.FieldValidator;
 import com.redpoints.interview.validators.MovieValidator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +27,10 @@ class MovieServiceTest {
     private MovieRepository repository;
 
     @Mock
-    private MovieValidator validator;
+    private MovieValidator movieValidator;
+
+    @Mock
+    private FieldValidator fieldValidator;
 
     private static List<MovieEntity> movieEntities;
 
@@ -47,7 +51,7 @@ class MovieServiceTest {
     @Test
     void testGetAllMoviesPositive() {
         // given
-        MovieService service = new MovieService(repository, validator);
+        MovieService service = new MovieService(repository, movieValidator, fieldValidator);
         doReturn(movieEntities).when(repository).findAll();
 
         // when
@@ -61,7 +65,7 @@ class MovieServiceTest {
     @Test
     void testGetMovieByIdPositive() {
         // given
-        MovieService service = new MovieService(repository, validator);
+        MovieService service = new MovieService(repository, movieValidator, fieldValidator);
         Long id = 1L;
         MovieEntity movieEntity = movieEntities.get(0);
         doReturn(Optional.of(movieEntity)).when(repository).findById(id);
@@ -71,16 +75,16 @@ class MovieServiceTest {
 
         // then
         verify(repository).findById(id);
-        verify(validator).validateIdNotNull(id);
+        verify(fieldValidator).validateIdNotNull(id);
         assertEquals(movieEntity, foundMovieEntity);
     }
 
     @Test
     void testGetMovieByIdNullId() {
         // given
-        MovieService service = new MovieService(repository, validator);
+        MovieService service = new MovieService(repository, movieValidator, fieldValidator);
         Long nullId = null;
-        doThrow(InvalidIdException.class).when(validator).validateIdNotNull(nullId);
+        doThrow(InvalidIdException.class).when(fieldValidator).validateIdNotNull(nullId);
 
         // then
         assertThrows(InvalidIdException.class, () -> service.getMovieById(nullId));
@@ -89,7 +93,7 @@ class MovieServiceTest {
     @Test
     void testGetMovieByIdWrongId() {
         // given
-        MovieService service = new MovieService(repository, validator);
+        MovieService service = new MovieService(repository, movieValidator, fieldValidator);
         Long nonexistentId = 2L;
 
         // then
@@ -100,7 +104,7 @@ class MovieServiceTest {
     @Test
     void testCreateMovie() {
         // given
-        MovieService service = new MovieService(repository, validator);
+        MovieService service = new MovieService(repository, movieValidator, fieldValidator);
         MovieEntity movieEntity = movieEntities.get(0);
         doReturn(movieEntity).when(repository).save(movieEntity);
 
@@ -116,7 +120,7 @@ class MovieServiceTest {
     @Test
     void testUpdateMoviePositive() {
         // given
-        MovieService service = new MovieService(repository, validator);
+        MovieService service = new MovieService(repository, movieValidator, fieldValidator);
         MovieEntity newMovieEntity = movieEntities.get(0);
         Long id = 1L;
         newMovieEntity.setId(id);
@@ -127,8 +131,8 @@ class MovieServiceTest {
 
         // then
         verify(repository).save(newMovieEntity);
-        verify(validator).validateMovieForUpdate(newMovieEntity.getId(), id);
-        verify(validator).validateIdNotNull(id);
+        verify(movieValidator).validateMovieForUpdate(newMovieEntity.getId(), id);
+        verify(fieldValidator).validateIdNotNull(id);
 
         assertEquals(newMovieEntity, service.updateMovie(newMovieEntity, id));
 
@@ -137,7 +141,7 @@ class MovieServiceTest {
     @Test
     void testDeleteMovie() {
         // given
-        MovieService service = new MovieService(repository, validator);
+        MovieService service = new MovieService(repository, movieValidator, fieldValidator);
         Long id = 1L;
 
         // when

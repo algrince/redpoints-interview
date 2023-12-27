@@ -22,6 +22,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class MovieControllerTest {
 
     // For integration test another H2-database was used, separated from one used in development
+    // Also this class was renamed (MovieControllerTestIT -> MovieControllerTest) to follow test
+    // naming convention, and thus being able to run this test with "mvn test"
 
     @Autowired
     private MockMvc mockMvc;
